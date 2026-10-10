@@ -1,0 +1,27 @@
+CREATE TABLE MANGE (
+    id         NUMBER(3),
+    name       VARCHAR2(50),
+    AGE        NUMBER(3),
+    birth_date DATE,
+    address    CHAR(20)
+);
+ALTER TABLE MANGE DROP COLUMN ADDRESS ;
+ALTER TABLE MANGE
+ADD (
+    city_address VARCHAR2(10),
+    street VARCHAR2(10)
+);
+
+ALTER TABLE MANGE
+RENAME COLUMN NAME TO FULL_NAME;
+
+ALTER TABLE MANGE READ WRITE;
+
+
+CREATE TABLE OWNER AS
+SELECT id AS owner_id,
+       FULL_NAME AS owner_name,
+       birth_date AS owner_birth_date
+FROM MANGE;
+
+RENAME  MANGE TO MASTER
