@@ -1,4 +1,6 @@
 public class sayhi {
+
+
     public  sayhi(String name){
         getmassage(name);
     }
@@ -15,5 +17,7 @@ public class sayhi {
             System.out.print("Hello, "+this.name);
         }
     }
+
+
 
 }
