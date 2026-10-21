@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="49783ae6-8ca9-4b75-9a87-09934b431600" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../task 1/prob 1/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../task 1/prob 1/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../task 1/prob 1/src/sayhi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../task 1/prob 1/src/sayhi.java" afterDir="false" />
-    </list>
+    <list default="true" id="49783ae6-8ca9-4b75-9a87-09934b431600" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,10 +18,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3KqRDvsei50SK8275nsVHChYPnr" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -35,6 +32,7 @@
     "Application.Main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "main",
@@ -97,7 +95,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/services/ApplicationServices/AppServiceImpl.java</url>
           <line>18</line>
-          <properties class="services.ApplicationServices.AppServiceImpl" method="start">
+          <properties class="services.ApplicationServices.AppServiceImpl">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -106,7 +104,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/services/ApplicationServices/AppServiceImpl.java</url>
           <line>85</line>
-          <properties class="services.ApplicationServices.AppServiceImpl" method="Login">
+          <properties class="services.ApplicationServices.AppServiceImpl">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
