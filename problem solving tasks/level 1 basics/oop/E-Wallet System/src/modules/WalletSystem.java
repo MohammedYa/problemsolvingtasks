@@ -8,11 +8,6 @@ public class WalletSystem {
 public static final String   name ="EGY-Wallet";
 private ArrayList<AccountsBuilder> accounts=new ArrayList<>();
 
-public String getName() {
-    return name;
-}
-Scanner scanner= new Scanner(System.in);
-
 public void setAccounts(ArrayList<AccountsBuilder> accounts) {
     this.accounts = accounts;
 }

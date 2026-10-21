@@ -44,9 +44,15 @@ public  class AppServiceImpl implements AppService {
                 }
             }
             catch (Throwable throwable){
-                System.out.print(" You Enter the Invalid Number ");
+                scanner.nextLine();
 
-                if(counter==3) {System.out.println("You have exceeded the maximum attempts!\n");}
+                System.out.print(" You Should Enter the Invalid Number  from 1 to 3 \n");
+
+                if(counter>=3) {System.out.println("You have exceeded the maximum attempts!\n");}
+                else{
+                    System.out.println("Remaining attempts: " + (3 - counter)+"\n");
+
+                }
                 counter++;
             }
 
