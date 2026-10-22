@@ -3,9 +3,11 @@ package services.ApplicationServices;
 import modules.AccountsBuilder;
 import modules.WalletSystem;
 import services.AccountServices.AccountServiceImpl;
+import Validtion.ValidationUtils;
 
 import java.util.Date;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public  class AppServiceImpl implements AppService {
     String  userName;
@@ -15,6 +17,8 @@ public  class AppServiceImpl implements AppService {
     Scanner scanner= new Scanner(System.in);
     AccountServiceImpl accountService=new AccountServiceImpl();
     AccountsBuilder account;
+
+    /** Displays the application menu and routes the selected operation. */
     @Override
     public void start() {
 
@@ -24,7 +28,8 @@ public  class AppServiceImpl implements AppService {
             System.out.print("------>  Choose  Number  Refer To Your Operation  <----------\n ");
             System.out.print("1--> Login    2--> Register   3--> Exist  \n ");
             try {
-                int enterNumber= scanner.nextInt();
+                int enterNumber = readInteger("", value -> value >= 1 && value <= 3,
+                        "Enter a number from 1 to 3.");
                 switch (enterNumber){
                     case 1:
                         Login();
@@ -43,16 +48,8 @@ public  class AppServiceImpl implements AppService {
 
                 }
             }
-            catch (Throwable throwable){
-                scanner.nextLine();
-
-                System.out.print(" You Should Enter the Invalid Number  from 1 to 3 \n");
-
-                if(counter>=3) {System.out.println("You have exceeded the maximum attempts!\n");}
-                else{
-                    System.out.println("Remaining attempts: " + (3 - counter)+"\n");
-
-                }
+            catch (RuntimeException exception) {
+                System.out.println("Unable to process that choice. Please try again.");
                 counter++;
             }
 
@@ -61,19 +58,21 @@ public  class AppServiceImpl implements AppService {
 
     }
 
+    /** Collects new account details and creates an account. */
     private void rigister() {
         System.out.print("Wellcome To Register Page \n");
 
         System.out.print("Enter Your UserName : \n");
-        userName = scanner.next();
+        userName = readInput("Enter Your UserName : \n", ValidationUtils::isUserNameValid,
+                "Username must contain alphabetic names of 3 to 10 letters.");
 
-        System.out.print("Enter Your  Password : \n");
-        password = scanner.next();
+        password = readInput("Enter Your Password : \n", ValidationUtils::isPasswordValid,
+                "Password needs 8 or more characters, an uppercase letter, a digit, and a special character.");
 
-        System.out.print("Enter Your  Number : \n");
-        phoneNumber =scanner.next() ;
-        System.out.print("Enter Your  Age : \n");
-        age =scanner.nextFloat() ;
+        phoneNumber = readInput("Enter Your Number : \n", ValidationUtils::isPhoneNumberValid,
+                "Enter a valid Egyptian mobile number.");
+        age = readFloat("Enter Your Age : \n", ValidationUtils::isAgeValid,
+                "Age must be between 15 and 75.");
         String dateOfCreation = String.valueOf(new Date());
 
         AccountsBuilder account= new AccountsBuilder(userName,password,phoneNumber,dateOfCreation,true,age);
@@ -89,13 +88,14 @@ public  class AppServiceImpl implements AppService {
         }
     }
 
+    /** Prompts for credentials and opens the account page after successful login. */
     private void Login() {
         System.out.print("Wellcome To Login Page \n");
 
-        System.out.print("Enter Your UserName : \n");
-        userName = scanner.next();
+        userName = readInput("Enter Your UserName : \n", ValidationUtils::isUserNameValid,
+                "Username must contain alphabetic names of 3 to 10 letters.");
 
-        System.out.print("Enter Your  Password : \n");
+        System.out.print("Enter Your Password : \n");
         password = scanner.next();
 
         account= new AccountsBuilder(userName,password);
@@ -109,6 +109,7 @@ public  class AppServiceImpl implements AppService {
          }
     }
 
+    /** Displays account operations and routes the selected operation. */
     private  void mainPage( AccountsBuilder account){
         System.out.print("Wellcome   "+account.getUserName()+"   To Home Page \n");
         System.out.print("What do you want to  do   "+account.getUserName()+"  ? \n");
@@ -120,7 +121,8 @@ public  class AppServiceImpl implements AppService {
                         
                         5---> Change password   6---> Logout
                         """);
-        int operationNumber = scanner.nextInt();
+        int operationNumber = readInteger("", value -> value >= 1 && value <= 6,
+                "Choose an operation from 1 to 6.");
         switch (operationNumber){
             case 1:
                 depositMoney(account);
@@ -147,6 +149,8 @@ public  class AppServiceImpl implements AppService {
 
 
     }
+
+    /** Changes the account password after the new password is confirmed. */
     private  void changePassword(AccountsBuilder account){
         System.out.print("-----------------------------------------------------\n");
         System.out.print("change Password Page ..... \n");
@@ -156,7 +160,8 @@ public  class AppServiceImpl implements AppService {
 //        System.out.print("Enter Current Password ..... \n");
 //        String Password=scanner.next();
         System.out.print("Enter New Password ..... \n");
-        String newPassword=scanner.next();
+        String newPassword = readInput("", ValidationUtils::isPasswordValid,
+                "Password needs 8 or more characters, an uppercase letter, a digit, and a special character.");
         System.out.print("Enter New Password ..... \n");
         String RePassword=scanner.next();
 
@@ -171,6 +176,8 @@ public  class AppServiceImpl implements AppService {
 
 
     }
+
+    /** Displays the account's profile and balance details. */
     private  void showAccount(AccountsBuilder account){
         System.out.print("-----------------------------------------------------\n");
         System.out.print("Show Account Details  Page ..... \n");
@@ -186,13 +193,16 @@ public  class AppServiceImpl implements AppService {
 
 
     }
+
+    /** Prompts for a positive amount and deposits it into the account. */
     private  void depositMoney(AccountsBuilder account){
 
         System.out.print("-----------------------------------------------------\n");
         System.out.print("Deposit Page ..... \n");
         System.out.print("-----------------------------------------------------\n");
         System.out.print("The amount of money to be deposited ..... \n");
-        int amountOfMoney = scanner.nextInt();
+        int amountOfMoney = readInteger("", value -> value > 0 && ValidationUtils.isBalanceValid(value),
+                "Enter an amount greater than zero.");
         if(amountOfMoney>0){
             accountService.chaneBalance(account,amountOfMoney,"Deposit");
             System.out.print("-----------   Deposit Successfully     ------------\n");
@@ -205,13 +215,16 @@ public  class AppServiceImpl implements AppService {
 
 
     }
+
+    /** Prompts for a valid amount and withdraws it from the account. */
     private  void withdrawMoney(AccountsBuilder account){
 
         System.out.print("-----------------------------------------------------\n");
         System.out.print("Withdraw Page ..... \n");
         System.out.print("-----------------------------------------------------\n");
         System.out.print("The amount of money to be Withdraied ..... \n");
-        int amountOfMoney = scanner.nextInt();
+        int amountOfMoney = readInteger("", value -> value > 0 && value <= account.getBalance(),
+                "Enter an amount greater than zero and no more than your balance.");
         if(amountOfMoney>0&&amountOfMoney<=account.getBalance()){
             accountService.chaneBalance(account,amountOfMoney,"Withdraw");
             System.out.print("-----------   Withdraw Successfully     ------------\n");
@@ -224,14 +237,18 @@ public  class AppServiceImpl implements AppService {
 
 
     }
+
+    /** Transfers a specified amount from the account to another user's account. */
     private  void transferMoney(AccountsBuilder account){
         System.out.print("-----------------------------------------------------\n");
         System.out.print("Transfer Page ..... \n");
         System.out.print("-----------------------------------------------------\n");
         System.out.print("The amount of money to be Transfer ..... \n");
-        int amountOfMoney = scanner.nextInt();
+        int amountOfMoney = readInteger("", value -> value > 0 && value <= account.getBalance(),
+                "Enter an amount greater than zero and no more than your balance.");
         System.out.print("The username you want to transfer to  ..... \n");
-        String userNameOfTransfer=scanner.next();
+        String userNameOfTransfer = readInput("", ValidationUtils::isUserNameValid,
+                "Enter a valid username.");
         String existUser=accountService.getAccountByUserName(account).getUserName();
         AccountsBuilder transferAccount=accountService.getAccountByUserName(userNameOfTransfer);
 
@@ -248,6 +265,52 @@ public  class AppServiceImpl implements AppService {
         }else {
             System.out.print("Account is not exist try again.....  ");
             transferMoney(account);
+        }
+    }
+
+    /** Reads tokens until one passes the supplied validation rule. */
+    private String readInput(String prompt, Predicate<String> validator, String errorMessage) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.next();
+            if (validator.test(input)) {
+                return input;
+            }
+            System.out.println(errorMessage);
+        }
+    }
+
+    /** Reads an integer that satisfies the supplied validation rule. */
+    private int readInteger(String prompt, Predicate<Integer> validator, String errorMessage) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.next();
+            try {
+                int value = Integer.parseInt(input);
+                if (validator.test(value)) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+                // Show the common validation message below.
+            }
+            System.out.println(errorMessage);
+        }
+    }
+
+    /** Reads an age that satisfies the account age rules. */
+    private float readFloat(String prompt, Predicate<Float> validator, String errorMessage) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.next();
+            try {
+                float value = Float.parseFloat(input);
+                if (validator.test(value)) {
+                    return value;
+                }
+            } catch (NumberFormatException ignored) {
+                // Show the common validation message below.
+            }
+            System.out.println(errorMessage);
         }
     }
 }
