@@ -36,7 +36,7 @@ public class Motorcycle extends Vehicle {
     public String toString() {
         return super.toString()
                 + " Motorcycle —  Engine: "
-                + this.getEngineType()+"  ###  " ;
+                + this.getEngineType()+"  ###  \n" ;
     }
 
     // Implements the abstract method defined in Vehicle.

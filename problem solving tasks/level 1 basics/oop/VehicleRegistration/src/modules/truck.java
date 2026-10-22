@@ -45,6 +45,6 @@ public class truck extends Vehicle {
         // Reuses the common vehicle information and appends the cargo capacity.
         return super.toString()
                 + " Cargo Capacity Is: ("
-                + this.getCargoCapacity() + ") tons "+"  ###  " ;
+                + this.getCargoCapacity() + ") tons "+"  ###  \n" ;
     }
 }

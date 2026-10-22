@@ -37,7 +37,7 @@ public class car extends Vehicle {
         // Reuses the common vehicle information and appends the number of doors.
         return super.toString()
                 + " Passenger Car —  Doors:  ("
-                + this.getNumOfDoor()+" ) ###  " ;
+                + this.getNumOfDoor()+" ) ###  \n" ;
     }
 
     // Implements the abstract method defined in Vehicle.

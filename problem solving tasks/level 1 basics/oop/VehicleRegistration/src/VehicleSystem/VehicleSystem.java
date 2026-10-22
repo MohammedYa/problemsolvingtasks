@@ -1,6 +1,7 @@
 
 package VehicleSystem;
 
+import Services.VehicleService;
 import Services.VehicleServiceImpl;
 import modules.*;
 
@@ -139,7 +140,7 @@ public class VehicleSystem {
             case 3:
                 vehicleType="Motorcycle";
                 System.out.print("Enter Type Of Engine : \n");
-                typeEnagine = scanner.nextLine();
+                typeEnagine = scanner.next();
                 break;
             default:
                 vehicleType="Car";
@@ -288,7 +289,20 @@ public class VehicleSystem {
 
     // Displays the ownership history.
     private void showOwnerHistory() {
-        System.out.println("Show Owner History selected.");
+        System.out.print("Show Owner History selected.");
+        System.out.print("Enter Owner Name :");
+        String ownerName=scanner.next();
+        List<Vehicle>ownerVehicle=  vehicleService.filterVehicleOwner(ownerName);
+
+        if (ownerName.isEmpty())
+        {
+            System.out.print("Owner name is not Found  :");
+
+        }
+        else
+        {
+            ownerVehicle.stream().forEach(System.out::println);
+        }
     }
 
     // Displays vehicles with expired registrations.
@@ -326,7 +340,8 @@ public class VehicleSystem {
 
     // Displays vehicle registration statistics.
     private void statisticsReport() {
-        System.out.println("Statistics Report selected.");
+        System.out.print(vehicleService.getStatisticsVehicle());
+        vehicleService.getStatisticsVehicle();
     }
 
 
