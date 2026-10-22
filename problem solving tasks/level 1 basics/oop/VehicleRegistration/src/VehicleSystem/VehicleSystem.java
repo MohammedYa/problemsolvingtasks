@@ -3,10 +3,12 @@ package VehicleSystem;
 
 import Services.VehicleService;
 import Services.VehicleServiceImpl;
+import ValidatorAndExeption.ValidationUtils;
 import modules.*;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public class VehicleSystem {
 
@@ -28,7 +30,7 @@ public class VehicleSystem {
         while (counter<=3){
             System.out.print(
                     """
-                                Welcome To Vehicles Showroom\s
+                            \n    Welcome To Vehicles Showroom\s
                             ========================================
                             1 ----> Register New Vehicle
                             2 ----> Search Vehicle by Plate Number
@@ -92,7 +94,7 @@ public class VehicleSystem {
             catch (java.util.InputMismatchException ex) {
                 // Remove the invalid input, such as letters, from the scanner.
                 scanner.nextLine();
-                System.out.print(" You Should Enter the Invalid Number  from 1 to 3 \n");
+                System.out.print(" You Should Enter the Invalid Number  from 0 to 9 \n");
                 counter++;
 
                 if (counter < 3) {
@@ -115,17 +117,23 @@ public class VehicleSystem {
     private void registerNewVehicle() {
         System.out.print("Register New Vehicle Page .\n");
 
-        // Receive the vehicle plate number.
-        System.out.print("Enter plate number: \n");
-         plateNumber = scanner.nextLine();
-
-        // Receive the owner's name.
-        System.out.print("Enter owner name: \n");
-         ownerName = scanner.nextLine();
+        // Read values again until they pass the corresponding validators.
+        plateNumber = readValidatedInput(
+                "Enter plate number: ", ValidationUtils::isPlateNumberValid,
+                "Invalid plate number. Use 3 to 10 letters, digits, or hyphens.");
+        ownerName = readValidatedInput(
+                "Enter owner name: ", ValidationUtils::isOwnerNameValid,
+                "Invalid owner name. Use name parts of 3 to 10 letters.");
 
         // Receive the vehicle type.
         System.out.print("Enter vehicle type:     1 ----> Car  |   2 ----> Truck   |   3 ----> Motorcycle \n");
-          int type = scanner.nextInt();
+        int type = scanner.nextInt();
+        scanner.nextLine();
+        while (type < 1 || type > 3) {
+            System.out.print("Invalid choice. Enter 1 for Car, 2 for Truck, or 3 for Motorcycle: ");
+            type = scanner.nextInt();
+            scanner.nextLine();
+        }
         switch (type){
             case 1:
                 vehicleType="Car";
@@ -141,24 +149,42 @@ public class VehicleSystem {
                 vehicleType="Motorcycle";
                 System.out.print("Enter Type Of Engine : \n");
                 typeEnagine = scanner.next();
+                scanner.nextLine();
                 break;
             default:
-                vehicleType="Car";
-                countOfDoor = 4;
-                break;
+                return;
 
+        }
+        if (!ValidationUtils.isVehicleTypeValid(vehicleType)) {
+            System.out.println("Invalid vehicle type.");
+            return;
         }
 
         // Receive the registration year.
         System.out.print("Enter registration year: \n");
          registrationYear = scanner.nextInt();
         scanner.nextLine(); // Consume the newline character.
+        while (!ValidationUtils.isRegistrationYearValid(registrationYear)) {
+            System.out.println("Invalid year. Enter a year from 1990 through "
+                    + java.time.Year.now().getValue() + ".");
+            System.out.print("Enter registration year: ");
+            registrationYear = scanner.nextInt();
+            scanner.nextLine();
+        }
 
         // Receive the active status.
         System.out.print("Is the vehicle active? insert   1 ------> ACTIVE   insert 2  ------> EXPIRED :\n ");
         int status=scanner.nextInt();
+        while (status != 1 && status != 2) {
+            System.out.print("Invalid choice. Enter 1 for ACTIVE or 2 for EXPIRED: ");
+            status = scanner.nextInt();
+        }
         if(status==1){isActive="ACTIVE";}
-        else {isActive="EXPIRED";}
+        else if (status==2) {isActive="EXPIRED";}
+        if (!ValidationUtils.isActiveValid(isActive)) {
+            System.out.println("Invalid registration status.");
+            return;
+        }
 
         scanner.nextLine(); // Consume the newline character.
 
@@ -210,8 +236,7 @@ public class VehicleSystem {
         System.out.print("Enter plate number: \n");
         plateNumber = scanner.nextLine();
         Vehicle vehicle=  vehicleService.getVehicleByPlateNumber(plateNumber);
-        System.out.print(vehicle);
-//        if (vehicle != null) {vehicle.toString();}else {System.out.println("Vehicle Is Not Exist");}
+        System.out.print(vehicle +"\n");
 
     }
 
@@ -224,13 +249,28 @@ public class VehicleSystem {
         if (vehicle != null)
         {
             System.out.print("Insert  New  Owner’s name .");
-            ownerName = scanner.nextLine();
+            ownerName = readValidatedInput(
+                    "Insert new owner's name: ", ValidationUtils::isOwnerNameValid,
+                    "Invalid owner name. Use name parts of 3 to 10 letters.");
             vehicleService.updateOwnerNameVehicle(plateNumber,ownerName);
             System.out.println(vehicleService.updateOwnerNameVehicle(plateNumber,ownerName));
 
         }
         else {System.out.println("Vehicle Is Not Exist");}
 
+    }
+
+    /** Reads text from the console until the supplied validation rule accepts it. */
+    private String readValidatedInput(String prompt, Predicate<String> validator,
+                                      String errorMessage) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine();
+            if (validator.test(input)) {
+                return input;
+            }
+            System.out.println(errorMessage);
+        }
     }
 
     // Deletes a registered vehicle.
