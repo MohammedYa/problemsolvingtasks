@@ -1,0 +1,51 @@
+## Search Task :
+
+# SQL Queries
+
+## 1. String Comparison
+
+```
+SELECT *
+FROM employees
+WHERE first_name > 'ahmed'
+  AND first_name < 'ali';
+```
+
+### **Question:** How will this work?
+SQL begins by comparing the names according to specific rules
+, sorting them alphabetically, and then retrieves all the names that meet the given condition.
+SELECT *
+FROM employees
+WHERE first_name BETWEEN 'ahmed' AND 'ali'; that sql qury equl as quetion .
+
+
+
+
+
+
+
+### Query 1
+```
+SELECT *
+FROM employees
+WHERE ROWNUM = 1;
+
+```
+
+### Query 2
+```
+SELECT *
+FROM employees
+WHERE ROWNUM = 2;
+
+```
+
+### Query 3
+```
+SELECT *
+FROM employees
+WHERE ROWNUM = 3;
+Question: Why does the first query work, while the second and third queries do not?
+```
+The way `ROWNUM` works is by assigning sequential values ​​to rows, starting with 1 for the first row. When Oracle attempts to select the first candidate row, it assigns it a `ROWNUM` of 1; consequently, the condition fails. Because this row is rejected, the sequence does not advance to `ROWNUM = 2`. As a result, 
+the next candidate row cannot be assigned the number 2 unless the first row has been accepted.
